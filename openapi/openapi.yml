@@ -1,0 +1,57 @@
+swagger: "2.0"
+
+info:
+  title: SemHash Dedupe API
+  version: "1.0.0"
+
+host: semhash-gw.endpoints.semhash-api.cloud.goog
+schemes:
+  - https
+
+x-google-endpoints:
+  - name: semhash-gw.endpoints.semhash-api.cloud.goog
+    allowCors: true
+
+paths:
+  /dedupe_csv:
+    post:
+      operationId: dedupeCsv            # ← REQUIRED, unique in entire file
+      summary: Deduplicate CSV via SemHash
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: file
+          description: CSV to deduplicate (≤ 32 MiB)
+          required: true
+          type: file
+        - in: query
+          name: threshold
+          description: Similarity cut-off (0–1). Default 0.9
+          required: false
+          type: number
+          format: float
+        - in: query
+          name: skip_columns
+          description: Comma-separated columns to ignore in hashing
+          required: false
+          type: string
+      x-google-backend:
+        address: https://semhash-136308605234.australia-southeast1.run.app/dedupe_csv
+      responses:
+        "200":
+          description: JSON array of deduplicated rows
+          schema:
+            type: array
+            items:
+              type: object
+
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: key          # clients pass ?key=YOUR_KEY
+    in: query
+
+security:
+  - api_key: []
+  
