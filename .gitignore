@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+env/
+# Editor
+.vscode/
+.idea/
+# OS
+.DS_Store
+# Build / Docker artefacts
+*.tar
+*.log

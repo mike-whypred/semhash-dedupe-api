@@ -1,0 +1,18 @@
+steps:
+- id: Build
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['build','-t','$LOCATION-docker.pkg.dev/$PROJECT_ID/semhash/semhash:$COMMIT_SHA','.']
+- id: Deploy
+  name: 'gcr.io/cloud-builders/gcloud'
+  args:
+    ['run','deploy','semhash',
+     '--image','$LOCATION-docker.pkg.dev/$PROJECT_ID/semhash/semhash:$COMMIT_SHA',
+     '--region','$LOCATION',
+     '--memory','1Gi','--cpu','1','--concurrency','80',
+     '--timeout','900',
+     '--allow-unauthenticated']
+images:
+- '$LOCATION-docker.pkg.dev/$PROJECT_ID/semhash/semhash:$COMMIT_SHA'
+options:
+  logging: CLOUD_LOGGING_ONLY   # cheaper than dual logging
+  
