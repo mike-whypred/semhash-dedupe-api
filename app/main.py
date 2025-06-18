@@ -1,9 +1,21 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import pandas as pd, io
 from semhash import SemHash
 
 app = FastAPI(title="SemHash CSV Deduper (JSON output)")
+
+# ── CORS ────────────────────────────────────────────────────────────────
+ALLOWED_ORIGINS = ["https://aibizsearch.info", "https://www.aibizsearch.info"]        
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=False,
+    allow_methods=["POST", "OPTIONS"],
+    allow_headers=["*"],
+)
+# ────────────────────────────────────────────────────────────────────────
 
 # ── service-wide defaults ────────────────────────────────────────────────
 MAX_DIRECT_BYTES   = 32 * 1024 * 1024   # 32 MiB upload limit
